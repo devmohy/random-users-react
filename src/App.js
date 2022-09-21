@@ -11,6 +11,13 @@ class App extends Component {
     }
   }
 
+  onSearchChange = (event) => {
+    const searchString = event.target.value.toLowerCase();
+    this.setState(() => {
+      return {searchString}
+    })
+  }
+
 
   componentDidMount(){
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -23,21 +30,14 @@ class App extends Component {
   }
 
   render(){
-    const filteredUsers = this.state.users.filter((user) => {
-      return user.name.toLowerCase().includes(this.state.searchString)
+    const { users, searchString } = this.state
+    const { onSearchChange } = this
+    const filteredUsers = users.filter((user) => {
+      return user.name.toLowerCase().includes(searchString)
     })
     return (
       <div className="App">
-        <input type='search' className='search-box' placeholder='search users' onChange={(event) => {
-          console.log({startUsersArray:this.state.users})
-          const searchString = event.target.value.toLowerCase();
-          this.setState(() => {
-            return {searchString: searchString}
-          }, 
-          () => {
-            console.log({endUsersArray:this.state.users})
-          })
-        }} />
+        <input type='search' className='search-box' placeholder='search users' onChange={onSearchChange} />
         {
           filteredUsers.map((user) => {
             return <div key={user.id}>
